@@ -55,6 +55,7 @@ import com.example.a30daysfitnesstips.data.tips
 import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Box
 //import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyListState
@@ -87,7 +88,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            _30DaysFitnessTipsTheme(darkTheme = true) {
+            _30DaysFitnessTipsTheme() {
                 FitnessApp()
             }
         }
@@ -160,37 +161,21 @@ private fun InnerScaffold(
         itemsIndexed(tips) { index, data ->
             val isVisible = checkVisibility(lazyListState, index)
             val itemSize = calculateSize(index, isVisible)
-            val textDay = if (isVisible) "Day " + index.toString() else ""
+            val textDay = if (isVisible) "Day " + (index+1).toString() else ""
 
             Column(
                 verticalArrangement = Arrangement.Center,
 //                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Card(modifier = Modifier
-                    .size(itemSize[2], 45.dp)
-                    .padding(5.dp),
-                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer),
-//                    border = BorderStroke(2.dp,MaterialTheme.colorScheme.tertiary),
-                    shape = RoundedCornerShape(10)
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(5.dp)
-                            .fillMaxSize(),
-                        text = textDay,
-                        textAlign = TextAlign.Center,
-                        style = LocalTextStyle.current.copy(
-                            letterSpacing = TextUnit.Unspecified
-                        ),
-                        color = MaterialTheme.colorScheme.onTertiaryContainer
-                    )
-                }
+
                 FitnessItem(
                     tip = data,
                     modifier = Modifier
                         .padding(5.dp)
-                        .size(itemSize[0], itemSize[1])
+                        .size(itemSize[0], itemSize[1]),
 //                        .align(CenterHorizontally)
+                    itemSize = itemSize,
+                    textDay = textDay
                 )
             }
         }
@@ -243,110 +228,120 @@ private fun calculateSize(
         ),
         label = "Box Size Animation"
     )
-    val dayWidth by animateDpAsState(
-        targetValue = if (isVisible) 100.dp else 25.dp,
+    val dayWidthSize by animateDpAsState(
+        targetValue = if (isVisible) 500.dp else 25.dp,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioNoBouncy,
             stiffness = Spring.StiffnessMedium
         ),
         label = "Box Size Animation"
     )
-    return listOf(fitnessWidthSize, fitnessHeightSize, dayWidth)
+    return listOf(fitnessWidthSize, fitnessHeightSize, dayWidthSize)
 }
 
-/**
- * Composable that displays a list item containing a dog icon and their information.
- *
- * @param dog contains the data that populates the list item
- * @param modifier modifiers to set to this composable
- */
 @Composable
 fun FitnessItem(
     tip: Tip,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    itemSize: List<Dp>,
+    textDay: String
 ) {
-    var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = modifier
-//            .animateContentSize(
-//                animationSpec = spring(
-//                    dampingRatio = Spring.DampingRatioHighBouncy,
-//                    stiffness = 0.1f
-//                )
-//            )
-//            .size(300.dp, 300.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .animateContentSize(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioNoBouncy,
-                        stiffness = Spring.StiffnessMedium
-                    )
-                )
-            ,
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AsyncImage(
-                modifier = Modifier.weight(0.65f),
-                model = tip.imageResourceId,
-                contentDescription = null,
-            )
-
-            Text(
-                modifier = Modifier.padding(5.dp)
-                    .weight(0.35f),
-                text = stringResource(tip.tipText),
-                textAlign = TextAlign.Justify,
-                style = LocalTextStyle.current.copy(
-                    letterSpacing = TextUnit.Unspecified
-                )
-            )
-            }
-
-//            if (expanded) {
-////                DogHobby(
-////                    dog.hobbies, modifier = Modifier.padding(
-////                        start = dimensionResource(R.dimen.padding_medium),
-////                        top = dimensionResource(R.dimen.padding_small),
-////                        bottom = dimensionResource(R.dimen.padding_medium),
-////                        end = dimensionResource(R.dimen.padding_medium)
-//                    )
-//                )
-//            }
-//        }
+        FitnessItemContent(
+            tip = tip,
+            modifier = Modifier,
+            itemSize = itemSize,
+            textDay = textDay
+        )
     }
 }
 
-//@Composable
-//fun WoofTopAppBar(modifier: Modifier = Modifier) {
-//    CenterAlignedTopAppBar(
-//        title = {
-//            Row(
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                Image(
-//                    modifier = Modifier
-//                        .size(dimensionResource(R.dimen.image_size))
-//                        .padding(dimensionResource(R.dimen.padding_small)),
-//                    painter = painterResource(R.drawable.ic_woof_logo),
-//
-//                    // Content Description is not needed here - image is decorative, and setting a
-//                    // null content description allows accessibility services to skip this element
-//                    // during navigation.
-//
-//                    contentDescription = null
-//                )
-//                Text(
-//                    text = stringResource(R.string.app_name),
-//                    style = MaterialTheme.typography.displayLarge
-//                )
-//            }
-//        },
-//        modifier = modifier
-//    )
-//}
+@Composable
+fun FitnessItemContent(
+    tip: Tip,
+    modifier: Modifier = Modifier,
+    itemSize: List<Dp>,
+    textDay: String
+) {
+    Column(
+        modifier = modifier
+            .animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessMedium
+                )
+            ),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        TopFitnessItemContent(
+            tip = tip,
+            modifier = Modifier.weight(0.65f),
+            itemSize = itemSize,
+            textDay = textDay
+        )
+        Text(
+            modifier = Modifier
+                .padding(5.dp)
+                .weight(0.35f),
+            text = stringResource(tip.tipText),
+            textAlign = TextAlign.Justify,
+            style = LocalTextStyle.current.copy(
+                letterSpacing = TextUnit.Unspecified
+            )
+        )
+    }
+}
+@Composable
+fun TopFitnessItemContent(
+    tip: Tip,
+    modifier: Modifier = Modifier,
+    itemSize: List<Dp>,
+    textDay: String
+) {
+    Column(
+        modifier = modifier
+//            .weight(0.65f)
+    ) {
+        TopFitnessItemContentCard(
+            modifier = Modifier,
+            itemSize = itemSize,
+            textDay = textDay
+        )
+        AsyncImage(
+            modifier = Modifier
+                .fillMaxWidth(),
+            model = tip.imageResourceId,
+            contentDescription = null,
+        )
+    }
+}
+
+@Composable
+fun TopFitnessItemContentCard(
+    modifier: Modifier = Modifier,
+    itemSize: List<Dp>,
+    textDay: String
+) {
+    Card(modifier = modifier
+        .size(itemSize[2], 45.dp),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
+        shape = RectangleShape
+    ) {
+        Text(
+            modifier = Modifier
+                .padding(5.dp)
+                .fillMaxSize(),
+            text = textDay,
+            textAlign = TextAlign.Center,
+            style = LocalTextStyle.current.copy(
+                letterSpacing = TextUnit.Unspecified
+            ),
+            color = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
 
 @Preview
 @Composable
@@ -357,14 +352,3 @@ fun WoofPreview() {
     }
 
 }
-
-/**
- * Composable that displays what the UI of the app looks like in dark theme in the design tab.
- */
-//@Preview
-//@Composable
-//fun WoofDarkThemePreview() {
-//    WoofTheme(darkTheme = true) {
-//        WoofApp()
-//    }
-//}
