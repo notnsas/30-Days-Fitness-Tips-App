@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">30 Days Fitness Tips</string>
+
+    <string name="tips_1">Healthy eating is the foundation of fitness because proper nutrition fuels your workouts and recovery.</string>
+    <string name="tips_2">Prepare your meals in advance so you avoid skipping meals or eating unhealthy food.</string>
+    <string name="tips_3">Eat smaller meals more frequently to support metabolism and energy levels.</string>
+    <string name="tips_4">Control your portions by using smaller plates and keeping servings reasonable.</string>
+    <string name="tips_5">Every meal should have a clear nutritional purpose to support performance and recovery.</string>
+
+    <string name="tips_6">To build muscle, increase calories and protein, train with good form, and prioritize rest.</string>
+    <string name="tips_7">Use a full range of motion in exercises to maximize muscle activation.</string>
+    <string name="tips_8">Choose weights that keep your muscles under tension for around 30 to 40 seconds per set.</string>
+    <string name="tips_9">Limit excessive cardio during mass-building phases to avoid burning needed calories.</string>
+    <string name="tips_10">Creatine is one of the most effective supplements for increasing strength and muscle size.</string>
+
+    <string name="tips_11">Endurance training requires proper hydration, nutrition, and a mix of cardio and strength work.</string>
+    <string name="tips_12">Monitor your heart rate to ensure your workouts are intense enough to improve endurance.</string>
+    <string name="tips_13">Train to muscle exhaustion using bodyweight movements to build endurance efficiently.</string>
+    <string name="tips_14">Short rest times between sets help improve overall endurance capacity.</string>
+    <string name="tips_15">Beet juice and motivating music can help reduce fatigue and improve endurance performance.</string>
+
+    <string name="tips_16">Building strength requires consistency, patience, focus, and proper recovery.</string>
+    <string name="tips_17">Staying motivated during lifts improves performance, while cold exposure can aid recovery.</string>
+    <string name="tips_18">Maintaining proper form reduces injury risk and ensures correct muscle activation.</string>
+    <string name="tips_19">Address weak points in your body because strength depends on your weakest link.</string>
+    <string name="tips_20">Changing weights, tempo, or reps prevents plateaus and keeps strength improving.</string>
+
+    <string name="tips_21">Fat loss depends on eating clean foods, strength training, and interval cardio.</string>
+    <string name="tips_22">Progress photos are more reliable than scales for tracking fat loss changes.</string>
+    <string name="tips_23">Controlling carbohydrates and extending cardio past 20 minutes helps burn stored fat.</string>
+    <string name="tips_24">Lower body training and proper diet are more effective for fat loss than endless crunches.</string>
+    <string name="tips_25">Proper hydration supports digestion, nutrient absorption, and metabolic health.</string>
+
+    <string name="tips_26">Do not overcomplicate training and focus on plans that help you break personal records.</string>
+    <string name="tips_27">Choose workouts you enjoy as long as they are effective and sustainable.</string>
+    <string name="tips_28">Training at RPE 8 or RIR 2 with the last set to failure helps you gauge effort accurately.</string>
+    <string name="tips_29">Vitamin D is underrated and can be improved through sunlight exposure.</string>
+    <string name="tips_30">On rest days, do light training below RPE 8 to improve weak points and break plateaus.</string>
+</resources>
