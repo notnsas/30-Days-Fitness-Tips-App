@@ -54,14 +54,32 @@ import com.example.a30daysfitnesstips.ui.theme._30DaysFitnessTipsTheme
 import com.example.a30daysfitnesstips.data.tips
 import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.BorderStroke
+//import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.GenericFontFamily
+import androidx.compose.ui.text.style.TextOverflow
+//import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpOffset
 import coil3.compose.AsyncImage
+import kotlin.collections.listOf
 
 //import coil3.compose.AsyncImage
 
@@ -69,8 +87,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            _30DaysFitnessTipsTheme(darkTheme = false) {
-//        FitnessItem(tip = tips[0])
+            _30DaysFitnessTipsTheme(darkTheme = true) {
                 FitnessApp()
             }
         }
@@ -80,171 +97,161 @@ class MainActivity : ComponentActivity() {
 /**
  * Composable that displays an app bar and a list of dogs.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FitnessApp() {
-    var modifierItem = remember { Modifier.padding(5.dp).size(400.dp, 500.dp) }
-//    var middleIndex by remember { mutableStateOf(0) }
     val lazyListState = rememberLazyListState()
-//    var widthSize: Dp = remember { 400.dp }
-//    var heightSize: Dp = remember { 500.dp }
-//    LaunchedEffect(lazyListState) {
-//        snapshotFlow { lazyListState.layoutInfo.visibleItemsInfo }
-//            .collect { item ->
-////                            item.forEachIndexed { index, it -> Log.d("TAG LAYOUTINFO", "$index" + ". " + "index:" + it.index.toString() + "| offset:" + it.offset.toString()) }
-////                            Log.d("TAG LAYOUTINFO", test)
-//                item.forEachIndexed { index, it ->
-//                    if (it.offset.toInt() > 0 && it.offset.toInt() < 300) {
-//                        Log.d(
-//                            "TAG LAYOUTINFO",
-//                            "$index" + ". " + "index:" + it.index.toString() + "| offset:" + it.offset.toString()
-//                        )
-//                        middleIndex = it.index.toInt()
-//                    } else Log.d(
-//                        "FAIL TAG LAYOUTINFO",
-//                        "$index" + ". " + "index:" + it.index.toString() + "| offset:" + it.offset.toString()
-//                    )
-//                }
-//            }
-//    }
-//    val fullyVisibleIndices: List<Int> by remember {
-//        derivedStateOf {
-//            val layoutInfo = lazyListState.layoutInfo
-//            val visibleItemsInfo = layoutInfo.visibleItemsInfo
-//            if (visibleItemsInfo.isEmpty()) {
-//                emptyList()
-//            } else {
-//                val fullyVisibleItemsInfo = visibleItemsInfo.toMutableList()
-//
-//                val lastItem = fullyVisibleItemsInfo.last()
-//
-//                val viewportHeight = layoutInfo.viewportEndOffset + layoutInfo.viewportStartOffset
-//
-//                if (lastItem.offset + lastItem.size > viewportHeight) {
-//                    fullyVisibleItemsInfo.removeLast()
-//                }
-//
-//                val firstItemIfLeft = fullyVisibleItemsInfo.firstOrNull()
-//                if (firstItemIfLeft != null && firstItemIfLeft.offset < layoutInfo.viewportStartOffset) {
-//                    fullyVisibleItemsInfo.removeFirst()
-//                }
-//
-//                fullyVisibleItemsInfo.map { it.index }
-//            }
-//        }
-//    }
-//    Log.d(
-//        "Fully visible",
-//        fullyVisibleIndices.toString()
-//    )
-
-
-//    val middleIndex by remember {
-//        derivedStateOf {
-//            val layoutInfo = lazyListState.layoutInfo
-//            val visibleItems = layoutInfo.visibleItemsInfo
-////            Log.d(
-////                "TAG LAYOUTINFO",
-////                layoutInfo.viewportEndOffset.toString()
-////            )
-//            visibleItems.forEachIndexed { index, it ->
-//                if (it.offset.toInt() > 0 && it.offset.toInt() < 300) {
-//                    Log.d(
-//                        "TAG LAYOUTINFO",
-//                        "$index" + ". " + "index:" + it.index.toString() + "| offset:" + it.offset.toString()
-//                    )
-//                    return@derivedStateOf it.index.toInt()
-//                } else Log.d(
-//                    "FAIL TAG LAYOUTINFO",
-//                    "$index" + ". " + "index:" + it.index.toString() + "| offset:" + it.offset.toString()
-//                )
-//            }
-////            if (visibleItems.isEmpty()) return@derivedStateOf 0
-//
-////            val viewportCenter = layoutInfo.viewportEndOffset / 2
-////
-////            visibleItems.minByOrNull { item ->
-////                val itemCenter = item.offset + item.size / 2
-////                kotlin.math.abs(itemCenter - viewportCenter)
-////            }?.index ?: 0
-//        }
-//    }
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(text = "Test123")
-                }
-            )
-//            WoofTopAppBar()
+            TopBarFitness()
         }
     ) { it ->
-        LazyRow(
-            state = lazyListState,
-            modifier = Modifier
-                .fillMaxSize(),
-            contentPadding = it,
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        InnerScaffold(lazyListState, it)
+    }
+}
 
-            itemsIndexed(tips) { index, data ->
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TopBarFitness(
+    modifier: Modifier = Modifier
+) {
+    CenterAlignedTopAppBar(
+        modifier = modifier
+            .clip(RoundedCornerShape(10))
+            .dropShadow(
+                shape = RoundedCornerShape(20.dp),
+                shadow = Shadow(
+                    radius = 20.dp,
+                    spread = 10.dp,
+                    color = Color(0x40000000),
+                    offset = DpOffset(x = 4.dp, 4.dp)
+                )
+            ),
+        title = {
+            Text(
+                text = stringResource(R.string.app_name),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.headlineLarge,
+                fontFamily = FontFamily.Serif,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+//            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.primary,
+        )
+    )
+}
 
-                val isVisible by remember {
-                    derivedStateOf {
 
-                        val layoutInfo = lazyListState.layoutInfo
-                        val visibleItemsInfo = layoutInfo.visibleItemsInfo
-                        val itemInfo = visibleItemsInfo.firstOrNull { it.index == index}
+@Composable
+private fun InnerScaffold(
+    lazyListState: LazyListState,
+    innerContent: PaddingValues,
+) {
+    LazyRow(
+        state = lazyListState,
+        modifier = Modifier
+            .fillMaxSize(),
+        contentPadding = innerContent,
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
 
-                        itemInfo?.let {
+        itemsIndexed(tips) { index, data ->
+            val isVisible = checkVisibility(lazyListState, index)
+            val itemSize = calculateSize(index, isVisible)
+            val textDay = if (isVisible) "Day " + index.toString() else ""
 
-                            val delta = it.size/2 //use your custom logic
-                            val center = lazyListState.layoutInfo.viewportEndOffset / 2
-                            val childCenter = it.offset + it.size / 2
-                            val target = childCenter - center
-                            if (target in -delta..delta) return@derivedStateOf true
-                        }
-                        false
-                    }
+            Column(
+                verticalArrangement = Arrangement.Center,
+//                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Card(modifier = Modifier
+                    .size(itemSize[2], 45.dp)
+                    .padding(5.dp),
+                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer),
+//                    border = BorderStroke(2.dp,MaterialTheme.colorScheme.tertiary),
+                    shape = RoundedCornerShape(10)
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .fillMaxSize(),
+                        text = textDay,
+                        textAlign = TextAlign.Center,
+                        style = LocalTextStyle.current.copy(
+                            letterSpacing = TextUnit.Unspecified
+                        ),
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
                 }
-
-                val widthSize by animateDpAsState(
-                    targetValue = if (isVisible) 350.dp else 300.dp,
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioNoBouncy,
-                        stiffness = Spring.StiffnessMedium
-                    ),
-                    label = "Box Size Animation"
-                )
-                val heightSize by animateDpAsState(
-                    targetValue = if (isVisible) 500.dp else 300.dp,
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioNoBouncy,
-                        stiffness = Spring.StiffnessMedium
-                    ),
-                    label = "Box Size Animation"
-                )
-//                widthSize = if (middleIndex == (index)) 400.dp else 300.dp
-//                heightSize = if (middleIndex == (index)) 500.dp else 300.dp
-//                if (middleIndex == (index))
                 FitnessItem(
                     tip = data,
-                    modifier = Modifier.padding(5.dp).size(widthSize, heightSize)
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .size(itemSize[0], itemSize[1])
+//                        .align(CenterHorizontally)
                 )
-//                else  FitnessItem(
-//                    tip = data,
-//                    modifier = Modifier.padding(5.dp).size(widthSize, heightSize)
-//                )
-
-//                Log.d(
-//                    "TAG LAYOUTINFO Middle index",
-//                    "middleindex:" + middleIndex.toString() + "| index: $index"
-//                )
-
             }
         }
     }
+}
+
+@Composable
+private fun checkVisibility(
+    lazyListState: LazyListState,
+    index: Int
+) : Boolean {
+    val isVisible by remember {
+        derivedStateOf {
+
+            val layoutInfo = lazyListState.layoutInfo
+            val visibleItemsInfo = layoutInfo.visibleItemsInfo
+            val itemInfo = visibleItemsInfo.firstOrNull { it.index == index}
+
+            itemInfo?.let {
+
+                val delta = it.size/2 //use your custom logic
+                val center = lazyListState.layoutInfo.viewportEndOffset / 2
+                val childCenter = it.offset + it.size / 2
+                val target = childCenter - center
+                if (target in -delta..delta) return@derivedStateOf true
+            }
+            false
+        }
+    }
+    return isVisible
+}
+@Composable
+private fun calculateSize(
+    index: Int,
+    isVisible: Boolean
+) : List<Dp> {
+    val fitnessWidthSize by animateDpAsState(
+        targetValue = if (isVisible) 350.dp else 300.dp,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioNoBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
+        label = "Box Size Animation"
+    )
+    val fitnessHeightSize by animateDpAsState(
+        targetValue = if (isVisible) 500.dp else 300.dp,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioNoBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
+        label = "Box Size Animation"
+    )
+    val dayWidth by animateDpAsState(
+        targetValue = if (isVisible) 100.dp else 25.dp,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioNoBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
+        label = "Box Size Animation"
+    )
+    return listOf(fitnessWidthSize, fitnessHeightSize, dayWidth)
 }
 
 /**
@@ -281,11 +288,6 @@ fun FitnessItem(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-//            Image(
-//                modifier = Modifier.weight(0.65f),
-//                painter = painterResource(tip.imageResourceId),
-//                contentDescription = null
-//            )
             AsyncImage(
                 modifier = Modifier.weight(0.65f),
                 model = tip.imageResourceId,
@@ -349,7 +351,7 @@ fun FitnessItem(
 @Preview
 @Composable
 fun WoofPreview() {
-    _30DaysFitnessTipsTheme(darkTheme = false) {
+    _30DaysFitnessTipsTheme(darkTheme = true) {
 //        FitnessItem(tip = tips[0])
         FitnessApp()
     }
